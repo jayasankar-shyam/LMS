@@ -8,21 +8,21 @@ win.title("My Library")
 win.geometry('340x440')
 win.configure(bg=bg)
 
-
+frame=tk.Frame(bg=bg)
 #Creating widgets
-loginLabel=tk.Label(win,text="Login",bg=bg,fg=fg)
-userLabel=tk.Label(win,text="Username",bg=bg,fg=fg)
-passLabel=tk.Label(win,text="Password",bg=bg,fg=fg)
-userInput=tk.Entry(win)
-passInput=tk.Entry(win,show="*")
-loginButton=tk.Button(win,text="Login")
+loginLabel=tk.Label(frame,text="Login",bg=bg,fg=fg,font=("Arial",30))
+userLabel=tk.Label(frame,text="Username",bg=bg,fg=fg,font=("Arial",16))
+passLabel=tk.Label(frame,text="Password",bg=bg,fg=fg,font=("Arial",16))
+userInput=tk.Entry(frame,font=("Arial",16))
+passInput=tk.Entry(frame,show="*",font=("Arial",16))
+loginButton=tk.Button(frame,text="Login",fg=fg,bg="#f35e46",font=("Arial",16))
 
 #placing on screen
-loginLabel.grid(row=0,column=0,columnspan=3)
-userLabel.grid(row=1,column=0)
+loginLabel.grid(row=0,column=0,columnspan=2,sticky="news",pady=40)
+userLabel.grid(row=1,column=0,pady=10)
 userInput.grid(row=1,column=1)
-passLabel.grid(row=2,column=0)
+passLabel.grid(row=2,column=0,pady=10)
 passInput.grid(row=2,column=1)
-loginButton.grid(row=3,column=0,columnspan=3)
-
+loginButton.grid(row=3,column=0,columnspan=2,pady=20)
+frame.pack()
 win.mainloop()
