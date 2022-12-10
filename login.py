@@ -6,7 +6,7 @@ bg="#333333"
 fg="#ffffff"
 win=tk.Tk()
 win.title("My Library")
-win.geometry('340x440')
+win.geometry('640x360')
 win.configure(bg=bg)
 frame=tk.Frame(bg=bg)
 
@@ -16,7 +16,7 @@ def login():
     if userInput.get()==username and passInput.get()==password:
         messagebox.showinfo(title="Login Successfull !!",message="You have successfully logged in.")
     else:
-        messagebox.showinfo(title="Login Failed !!",message="Please check your credentials.")
+        messagebox.showerror(title="Login Failed !!",message="Please check your credentials.")
 
 #Creating widgets
 loginLabel=tk.Label(frame,text="Login",bg=bg,fg=fg,font=("Arial",30))
