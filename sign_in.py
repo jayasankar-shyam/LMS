@@ -63,28 +63,15 @@ Frame(frame, width=295, height=2, bg="black").place(x=25, y=177)
 def sign_in():
     username=user.get()
     password=code.get()
-
     sql = "select * from users where username = %s and password = %s"
     cur.execute(sql, [(username), (password)])
     results = cur.fetchall()
-
-    if username == "admin" and password == "1234":
-        screen = Toplevel(root)
-        screen.title("Application")
-        screen.geometry("925x500+300+200")
-        screen.config(bg="white")
-
-        Label(screen, text="Data Structure \nand \nAlgorithm", bg="#fff", font=("Calibri(Body)", 50, "bold")).pack(expand=True)
-
-        screen.mainloop
-
-    elif username != "admin" and password != "1234":
-        messagebox.showerror("Invalid", "Invalid username and password")
-    elif password != "1234":
-        messagebox.showerror("Invalid", "Invalid password")
-    
-
-
+    if results:
+        msg_box=messagebox.showinfo(title="Login Successfull !!",message="You have successfully logged in.")
+        if msg_box=="OK":
+            print("Settttttttttttttttttttt")
+    else:
+        messagebox.showerror(title="Login Failed !!",message="Please check your credentials.")
 Button(frame, width=39, pady=7, text="Sign in", bg="#57a1f8", fg="white", border=0, command=sign_in).place(x=35, y=204)
 label = Label(frame, text="Don't have an account?", fg="black", bg="white", font=("Microsoft Yahei Light",9))
 label.place(x=75, y=270)
