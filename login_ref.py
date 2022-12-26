@@ -10,7 +10,7 @@ def dele():
         host="localhost",
         user="root",
         passwd="mysql",
-        database = 'abhijith',
+        database = 'sample',
         auth_plugin='mysql_native_password')
     mycursor = mydb.cursor()    
     name=e1.get()    
@@ -23,7 +23,7 @@ def dele():
     #cl()
 
 def Ok():
-    mysqldb = mysql.connector.connect(host="localhost", user="root", password="mysql", database="abhijith")
+    mysqldb = mysql.connector.connect(host="localhost", user="root", password="pass", database="sample")
     mycursor = mysqldb.cursor()
     admin= e1.get()
     passw= e2.get()
@@ -43,7 +43,7 @@ def Ok():
         host="localhost",
         user="root",
         passwd="mysql",
-        database = 'abhijith',
+        database = 'sample',
         auth_plugin='mysql_native_password')
         
         mycursor = mydb.cursor()
@@ -125,7 +125,7 @@ def newr():
     c3 = Entry(root)
     c3.place(x=140, y=100)
     def done():
-        mysqldb = mysql.connector.connect(host="localhost", user="root", password="mysql", database="abhijith")
+        mysqldb = mysql.connector.connect(host="localhost", user="root", password="mysql", database="sample")
         mycursor = mysqldb.cursor()
         d1=c1.get()
         d2=c2.get()
@@ -174,7 +174,7 @@ def newr():
             
             
             else:
-                mysqldb = mysql.connector.connect(host="localhost", user="root", password="mysql", database="abhijith")
+                mysqldb = mysql.connector.connect(host="localhost", user="root", password="mysql", database="sample")
                 mycursor = mysqldb.cursor()
                 n1=p1.get()
                 n2=p2.get()
