@@ -360,6 +360,7 @@ def user_win():
     Label(us, bg="white").place(x=50, y=50)
     frame = Frame(us, width=1500, height=70, bg="white")
     frame.place(x=550, y=0)
+    
     # Sign in Header
     heading = Label(frame, text="User Details", fg="#57a1f8", bg="white", font=("Microsoft Yahei Light", 23, "bold"))
     heading.place(x=100, y=10)
@@ -368,13 +369,68 @@ def user_win():
     cur.execute(sql, [(usern)])
     dets=cur.fetchall()
     #########################---DETAILS---#########################
-    details=Frame(us,width=500,height=600)
-    details.place(x=30,y=60)       
+    details=Frame(us,width=500,height=600,bg="white")
+    details.place(x=30,y=60)
     name_label=Label(details,text="Welcome "+dets[0][1], bg="white", font=("Microsoft Yahei Light", 15, "bold"))
     name_label.place(x=10,y=20)
+        #Enter Fields
+    text = Label(details, text="FULL-NAME", fg="black", bg="white", font=("Supreme",15))
+    text.place(x=10, y=170)
+    text0 = Label(details,text=" "+dets[0][1], fg="black", bg="white", font=("Microsoft Yahei Light",15))
+    text0.place(x=10, y=210)
+    text1 = Label(details, text="ID", fg="black", bg="white", font=("Supreme",15))
+    text1.place(x=10, y=250)
+    text2 = Label(details,text=" "+str(dets[0][0]), fg="black", bg="white", font=("Microsoft Yahei Light",15))
+    text2.place(x=10, y=290)
+    text3 = Label(details, text="SEMESTER", fg="black", bg="white", font=("Supreme",15))
+    text3.place(x=10, y=330)
+    text4 = Label(details,text=" "+str(dets[0][3]), fg="black", bg="white", font=("Microsoft Yahei Light",15))
+    text4.place(x=10, y=370)
+    text5 = Label(details, text="DEPARTMENT", fg="black", bg="white", font=("Supreme",15))
+    text5.place(x=10, y=410)
+    text6 = Label(details,text=" "+dets[0][2], fg="black", bg="white", font=("Microsoft Yahei Light",15))
+    text6.place(x=10, y=450)
+    text7 = Label(details, text="NO OF BOOKS ISSUED", fg="black", bg="white", font=("Supreme",15))
+    text7.place(x=10, y=490)
+
+    im=Frame(details,height=90,width=90,bg="white")
+    im.place(x=10,y=70)
+    img =PhotoImage(file='D:\\CODING\\LMS\\Jupyter\\pro.png')
+    imlabel=Label(im,image=img,borderwidth=0)
+    imlabel.pack()
+
+    
+    #########################---AVAILABLE FRAME---##########################
+    bookAvailable=Frame(us,height=600,width=400, bg="#57a1f8")
+    bookAvailable.place(x=1080,y=60)
+    books_label=Label(bookAvailable,text="Available Books",fg="white",bg="#57a1f8", font=("Microsoft Yahei Light", 23, "bold"))
+    id_label=Label(bookAvailable,text="ID",fg="white",bg="#57a1f8", font=("Microsoft Yahei Light", 15, "bold"))
+    title_label=Label(bookAvailable,text="Title",fg="white",bg="#57a1f8", font=("Microsoft Yahei Light", 15, "bold"))
+    id_label.place(x=50,y=80)
+    title_label.place(x=190,y=80)
+
+    books_label.place(x=100,y=20)
+
+    books_list="select id ,title from books WHERE id not in (select b.id from books b inner join book_issued bi ON bi.book_id=b.id where bi.user_id=%s);"
+    cur.execute(books_list,[(dets[0][0])])
+    books_list=cur.fetchall()
+    list_books=[]
+    id_books=[]
+    for i in books_list:
+        list_books.append(i[1])
+        id_books.append(i[0])    
+    ycor=125
+    num=1
+    for i,j in zip(list_books,id_books):
+        id1=Label(bookAvailable,text=j,fg="black",bg="#57a1f8", font=("Microsoft Yahei Light", 15))
+        book1=Label(bookAvailable,text=i,fg="black",bg="#57a1f8", font=("Microsoft Yahei Light", 15))
+        book1.place(x=190,y=ycor)
+        id1.place(x=50,y=ycor)
+        ycor+=50
+
     #########################---BOOKS FRAME---######################
     books=Frame(us,width=400,height=600,bg="#57a1f8")
-    books.place(x=1080,y=60)
+    books.place(x=600,y=60)
     isb=Label(books,text="Issued Books",fg="white",bg="#57a1f8", font=("Microsoft Yahei Light", 23,"bold"))
     t=Label(books,text="Title",fg="white",bg="#57a1f8", font=("Microsoft Yahei Light", 15,"bold"))
     idl=Label(books,text="ID",fg="white",bg="#57a1f8", font=("Microsoft Yahei Light", 15,"bold"))
@@ -390,13 +446,16 @@ def user_win():
         list_books.append(i[1])
         id_books.append(i[0])  
     ycor=125
-
+    no=0
     for i,j in zip(list_books,id_books):
         id1=Label(books,text=j,fg="black",bg="#57a1f8", font=("Microsoft Yahei Light", 15))
         book1=Label(books,text=i,fg="black",bg="#57a1f8", font=("Microsoft Yahei Light", 15))
         book1.place(x=190,y=ycor)
         id1.place(x=50,y=ycor)
         ycor+=50
+        no+=1
+    text8 = Label(details,text=no, fg="black", bg="white", font=("Microsoft Yahei Light",15))
+    text8.place(x=15, y=530)
     us.mainloop()
 
 
