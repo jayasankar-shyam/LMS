@@ -314,8 +314,13 @@ def admin():
                 sql="SELECT book_id from book_issued where user_id=%s"
                 cur.execute(sql,[(idno)])
                 res=cur.fetchall()
+                sql="SELECT id from books"
+                cur.execute(sql)
+                fullbooks=cur.fetchall()
                 if int(bid) in id_books:
                     msg=messagebox.showerror(title="Not Found",message="Book Not Issued")
+                elif (int(bid),) not in fullbooks:
+                    msg=messagebox.showerror(title="INVALID ID",message="Invalid book id")
                 elif (int(bid),) not in res:
                     msg=messagebox.showinfo(title="Book Returned",message="Book Returned Successfully")
                 else:
@@ -343,8 +348,126 @@ def admin():
     but.place(x=325,y=150)
     Button(but, width=20, pady=7, text="Issue Book", bg="#57a1f8", fg="white", border=0, command=issue_book,font=("Microsoft Yahei Light", 15, "bold")).place(x=0, y=50)
     Button(but, width=20, pady=7, text="Return Book", bg="#57a1f8", fg="white", border=0, command=return_book,font=("Microsoft Yahei Light", 15, "bold")).place(x=300, y=50)
-    Button(but, width=20, pady=7, text="Exit", bg="#57a1f8", fg="white", border=0, command=adm.destroy,font=("Microsoft Yahei Light", 15, "bold")).place(x=600, y=50)
+    Button(but, width=20, pady=7, text="ADD/DELETE BOOK", bg="#57a1f8", fg="white", border=0, command=addOrDelete,font=("Microsoft Yahei Light", 15, "bold")).place(x=600, y=50)
     adm.mainloop()
+
+def addOrDelete():
+    bk=Tk()
+    title="BOOKS"
+    bk.title(title)            
+    bk.geometry("1500x720+10+30")
+    bk.configure(bg="")
+    bk.resizable(False,False)
+    # Frame of the GUI
+    Label(bk, bg="white").place(x=50, y=50)
+    frame = Frame(bk, width=1500, height=70, bg="white")
+    frame.place(x=550, y=0)
+    
+    # Sign in Header
+    heading = Label(frame, text="BOOKS", fg="#57a1f8", bg="white", font=("Microsoft Yahei Light", 23, "bold"))
+    heading.place(x=100, y=10)
+    ###########--printing available books--#####################
+    bookAvailable=Frame(bk,height=600,width=730, bg="#57a1f8")
+    bookAvailable.place(x=750,y=70)
+    books_label=Label(bookAvailable,text="Available Books",fg="white",bg="#57a1f8", font=("Microsoft Yahei Light", 23, "bold"))
+    id_label=Label(bookAvailable,text="ID",fg="white",bg="#57a1f8", font=("Microsoft Yahei Light", 15, "bold"))
+    title_label=Label(bookAvailable,text="Title",fg="white",bg="#57a1f8", font=("Microsoft Yahei Light", 15, "bold"))
+    nos_label=Label(bookAvailable,text="No of books issued",fg="white",bg="#57a1f8", font=("Microsoft Yahei Light", 15, "bold"))
+    id_label.place(x=50,y=80)
+    title_label.place(x=190,y=80)
+    books_label.place(x=220,y=20)
+    nos_label.place(x=500,y=80)
+    
+    books_list="select * from books"
+    cur.execute(books_list)
+    books_list=cur.fetchall() 
+    
+    nos_list="select book_id,count(book_id) from book_issued group by book_id"
+    cur.execute(nos_list)
+    nos_list=cur.fetchall() 
+    
+    ycor=125
+    for i in books_list:
+        nu=0
+        for j in nos_list:
+            if i[0]==j[0]:
+                nu+=j[1]
+        id1=Label(bookAvailable,text=i[0],fg="black",bg="#57a1f8", font=("Microsoft Yahei Light", 15))
+        book1=Label(bookAvailable,text=i[1],fg="black",bg="#57a1f8", font=("Microsoft Yahei Light", 15))
+        nos1=Label(bookAvailable,text=nu,fg="black",bg="#57a1f8", font=("Microsoft Yahei Light", 15))
+        book1.place(x=190,y=ycor)
+        id1.place(x=50,y=ycor)
+        nos1.place(x=500,y=ycor)
+        ycor+=50   
+    entry=Frame(bk,height=600,width=500,bg="white")
+    entry.place(x=30,y=60)
+    head=Label(entry,text="ADD/DELETE BOOKS",fg="black",bg="white", font=("Microsoft Yahei Light", 23, "bold"))
+    head.place(x=100,y=20)
+    ##############ID####################
+    def on_enter(e):
+        idno.delete(0, "end")
+    def on_leave(e):
+        name=idno.get()
+        if name == "":
+            idno.insert(0,"ID")
+    idno = Entry(entry, width=25, fg="black", border=0, bg="white", font=("Microsoft Yahei Light",11))
+    idno.place(x=80, y=120)
+    idno.insert(0,"ID")
+    idno.bind("<FocusIn>", on_enter)
+    idno.bind("<FocusOut>", on_leave)
+    Frame(entry, width=295, height=2, bg="black").place(x=70, y=147)
+    ##############TITLE################
+    def on_enter(e):
+        fname.delete(0, "end")
+    def on_leave(e):
+        name=fname.get()
+        if name == "":
+            fname.insert(0,"Title")
+    fname = Entry(entry, width=25, fg="black", border=0, bg="white", font=("Microsoft Yahei Light",11))
+    fname.place(x=80, y=190)
+    fname.insert(0,"Title")
+    fname.bind("<FocusIn>", on_enter)
+    fname.bind("<FocusOut>", on_leave)    
+    Frame(entry, width=295, height=2, bg="black").place(x=70, y=217)
+    
+    def addb():
+        idn=idno.get()
+        title=fname.get()
+        for i in books_list:
+            if int(idn)== i[0]:
+                messagebox.showerror(title="ID ALREADY EXISTS",message="Please check the ID.")
+                return 0
+        sql="INSERT INTO books values(%s,%s)"
+        cur.execute(sql,[(idn),(title)])
+        conn.commit()
+        messagebox.showinfo(title="ADDED SUCESSFULLY",message="Book added sucessfully")
+        bk.destroy()
+        addOrDelete()        
+    def delb():
+        idn=idno.get()
+        title=fname.get()
+        for i in books_list:
+            if int(idn)== i[0]:
+                if title!=i[1]:
+                    messagebox.showerror(title="Incorrect details",message="Please check id/title.")
+                    return 0
+        for i in nos_list:
+            if int(idn)==i[0]:
+                if i[1]>0:
+                    messagebox.showerror(title="Book in use",message="Book is issued by someone")
+                    return 0
+        sql="DELETE FROM books WHERE id=%s"
+        cur.execute(sql,[(idn)])
+        conn.commit()
+        messagebox.showinfo(title="DELETED SUCESSFULLY",message="Book deleted sucessfully")
+        bk.destroy()
+        addOrDelete() 
+        
+        
+    Button(entry, width=15, pady=4, text="ADD", bg="#57a1f8", fg="black",command=addb, border=0,font=("Microsoft Yahei Light", 15, "bold")).place(x=30, y=300)
+    Button(entry, width=15, pady=4, text="DELETE", bg="#57a1f8", fg="black", command=delb,border=0,font=("Microsoft Yahei Light", 15, "bold")).place(x=280, y=300)    
+        
+    bk.mainloop()
 
 ##################-----USER WINDOW-----###################
 def user_win():
@@ -457,8 +580,6 @@ def user_win():
     text8 = Label(details,text=no, fg="black", bg="white", font=("Microsoft Yahei Light",15))
     text8.place(x=15, y=530)
     us.mainloop()
-
-
 ##################-----SIGN UP WINDOW-----###################
 def sign_up():
     #root.destroy()
@@ -608,10 +729,8 @@ def sign_up():
             messagebox.showerror(title="Sign Up Failed !!",message="Please check your fields.")
     Button(frame, width=39, pady=7, text="Submit", bg="#57a1f8", fg="white", border=0,command=check).place(x=35, y=617)
     sp.mainloop()
-
-
 ##################-----MAIN-----###################
-from tkinter import* 
+from tkinter import*  
 from tkinter import messagebox
 import mysql.connector
 
